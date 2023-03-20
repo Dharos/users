@@ -19,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-    public static final String ISO_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private final String PASSWORD_REGEX = "^(?=.*?[A-Z]){1,1}(?=.*?[a-z])(?=.*?[0-9]){2,2}.{8,12}$";
 
@@ -32,6 +31,7 @@ public class UserServiceImpl implements UserService {
         log.info("Creando nuevo usario con email: {}", userDTO.getEmail());
         User user = userMapper.map(userDTO);
         if(!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())){
+            log.error("Ya existe un usuario con el email {} registrado", userDTO.getEmail());
             throw new UserDuplicatedException("Ya existe un usuario con el email "
                     + user.getEmail()+" registrado.");
         }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.map(user);
     }
 
-    public void checkEmailIsValid(String email) throws UserEmailException {
+    private void checkEmailIsValid(String email) throws UserEmailException {
         if(!email.matches(EMAIL_REGEX)){
             throw new UserEmailException("El email es invalido, ingrese un email valido.");
         }

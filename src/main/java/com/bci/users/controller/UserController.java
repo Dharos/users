@@ -5,6 +5,7 @@ import com.bci.users.exception.*;
 import com.bci.users.mapper.UserMapper;
 import com.bci.users.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<UserDTO> signUp(@RequestBody UserDTO userDTO) throws UserEmailException, UserPasswordException, UserDuplicatedException {
-        return ResponseEntity.created(null).body(userService.createUser(userDTO));
+        return new ResponseEntity<>(userService.createUser(userDTO), HttpStatus.CREATED);
     }
 
 
