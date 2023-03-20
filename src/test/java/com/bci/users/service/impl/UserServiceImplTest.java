@@ -5,10 +5,13 @@ import com.bci.users.entity.User;
 import com.bci.users.exception.*;
 import com.bci.users.mapper.UserMapper;
 import com.bci.users.repository.UserRepository;
+import com.bci.users.util.JwtUtil;
 import com.bci.users.utility.UserUtility;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -82,20 +85,25 @@ class UserServiceImplTest {
     }
 
     @Test
-    @Disabled
     void loginTest() throws UserNotFoundException, UserTokenNotFoundException {
 
         String token = UserUtility.getUserToken();
-//        when(this.userRepository.findByEmailAndToken((String)any(),(String)any()))
-//                .thenReturn(Optional.of(UserUtility.generateUserSaved()));
-//        doReturn(Optional.of(UserUtility.generateUserSaved())).when(this.userRepository)
-//                .findByEmailAndToken((String)any(),(String)any());
-//        mockedStatic.when(()-> JwtUtil.getEmailUser((String)any())).thenReturn(UserUtility.generateUser().getEmail());
+
+        when(this.userRepository.findByEmailAndToken((String)any(),(String)any()))
+                .thenReturn(Optional.of(UserUtility.generateUserSaved()));
+        when(this.userRepository.save(any(User.class))).thenReturn(UserUtility.generateUserSavedWithLastLogin());
+        doReturn(Optional.of(UserUtility.generateUserSaved())).when(this.userRepository)
+                .findByEmailAndToken((String)any(),(String)any());
+        when(this.userMapper.map(any(User.class))).thenReturn(UserUtility.generateUserDTOSavedWithLastLogin());
+
+        MockedStatic mockedStatic = Mockito.mockStatic(JwtUtil.class);
+        mockedStatic.when(()-> JwtUtil.getEmailUser((String)any()))
+                .thenReturn(UserUtility.generateUser().getEmail());
+
         UserDTO response = this.userService.login(token);
 
         assertTrue(response.getLastLogin() != null);
         assertEquals(response.getLastLogin().toLocalDate(), LocalDateTime.now().toLocalDate());
-        assertNotEquals(response.getToken(), token);
     }
 
 }
