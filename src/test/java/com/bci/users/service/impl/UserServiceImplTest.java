@@ -8,39 +8,26 @@ import com.bci.users.repository.UserRepository;
 import com.bci.users.utility.UserUtility;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.runner.RunWith;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {UserServiceImpl.class})
-@ExtendWith(SpringExtension.class)
+@RunWith(SpringRunner.class)
 class UserServiceImplTest {
-    @Autowired
-    private UserServiceImpl userServiceImpl;
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
-    @MockBean
-    private UserMapper userMapper;
+    private UserMapper userMapper = mock(UserMapper.class);
 
-    @MockBean
-    private UserRepository userRepository;
+    private UserRepository userRepository = mock(UserRepository.class);
 
-    @Autowired
-    @InjectMocks
-    private UserServiceImpl userService;
+    private UserServiceImpl userService = new UserServiceImpl(userRepository,userMapper,passwordEncoder);
 
 
     @Test
