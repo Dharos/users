@@ -14,10 +14,10 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "lastLogin", ignore = true)
-    @Mapping(target = "token", ignore = true)
     User map(UserDTO userDTO);
 
-    UserDTO map(User user);
+    @Mapping(target = "token",source = "token")
+    UserDTO map(User user, String token);
 
     Set<Phone> mapPhone(Set<PhoneDTO> phoneDTOList);
     Set<PhoneDTO> mapPhoneDto(Set<Phone> phoneList);

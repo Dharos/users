@@ -37,12 +37,12 @@ public class UserServiceImpl implements UserService {
         }
         checkEmailIsValid(user.getEmail());
         checkPasswordIsValid(user.getPassword());
-        user.setToken(JwtUtil.getAuthenticationJWT(user.getName(),user.getEmail()));
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userCreated = userRepository.save(user);
+        String token = JwtUtil.getAuthenticationJWT(user.getName(),user.getEmail());
         log.info("Usuario con email: {} creado", user.getEmail());
-        return userMapper.map(userCreated);
+        return userMapper.map(userCreated,token);
     }
 
 
@@ -52,13 +52,12 @@ public class UserServiceImpl implements UserService {
         }
 
         String email = JwtUtil.getEmailUser(token);
-        User user = userRepository.findByEmailAndToken(email,token.replace("Bearer", "")
-                        .replace(" ",""))
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new UserNotFoundException("La credencial de acceso es invalida o no se encuentra registrada."));
-        user.setToken(JwtUtil.getAuthenticationJWT(user.getName(),user.getEmail()));
         user.setLastLogin(LocalDateTime.now());
         user= userRepository.save(user);
-        return userMapper.map(user);
+        String newToken = JwtUtil.getAuthenticationJWT(user.getName(),user.getEmail());
+        return userMapper.map(user,newToken);
     }
 
     private void checkEmailIsValid(String email) throws UserEmailException {

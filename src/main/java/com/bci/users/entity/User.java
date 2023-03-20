@@ -36,8 +36,6 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    private String token;
-
     @Column(name = "is_active")
     private boolean isActive;
 

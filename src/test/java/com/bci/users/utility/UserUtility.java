@@ -39,7 +39,6 @@ public class UserUtility {
         user.setName("Jhon Doe");
         user.setPassword("z5fydAdhys9a");
         user.setPhones(new ArrayList<>());
-        user.setToken("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiSmhvbiBEb2UiLCJlbWFpbCI6Impob24uZG9lQGdtYWlsLmNvbSIsInN1YiI6Impob24uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTY3ODgxMjcyMn0.4Gf8RqKfUJ2eHTezGj56Lq-8YiQA03G_LssUDcIMzF4");
         return user;
     }
 
@@ -72,7 +71,6 @@ public class UserUtility {
         user.setPassword("z5fydAdhys9a");
         user.setPhones(new ArrayList<>());
         user.setLastLogin(LocalDateTime.now());
-        user.setToken("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiSmhvbiBEb2UiLCJlbWFpbCI6Impob24uZG9lQGdtYWlsLmNvbSIsInN1YiI6Impob24uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTY3ODgxMjcyMn0.4Gf8RqKfUJ2eHTezGj56Lq-8YiQA03G_LssUDcIMzF4");
         return user;
     }
 

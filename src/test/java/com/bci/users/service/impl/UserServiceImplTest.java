@@ -7,7 +7,6 @@ import com.bci.users.mapper.UserMapper;
 import com.bci.users.repository.UserRepository;
 import com.bci.users.util.JwtUtil;
 import com.bci.users.utility.UserUtility;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
@@ -38,7 +37,7 @@ class UserServiceImplTest {
         when(this.userMapper.map(any(UserDTO.class))).thenReturn(UserUtility.generateUser());
         when(this.userRepository.findByEmail((String) any())).thenReturn(Optional.empty());
         when(this.userRepository.save(any(User.class))).thenReturn(UserUtility.generateUserSaved());
-        when(this.userMapper.map(any(User.class))).thenReturn(UserUtility.generateUserDTOSaved());
+        when(this.userMapper.map(any(User.class),(String)any()) ).thenReturn(UserUtility.generateUserDTOSaved());
         when(this.passwordEncoder.encode((String) any())).thenReturn(UserUtility.generateUserDTO().getPassword());
         UserDTO userDTO = UserUtility.generateUserDTO();
         UserDTO response = this.userService.createUser(userDTO);
@@ -89,12 +88,12 @@ class UserServiceImplTest {
 
         String token = UserUtility.getUserToken();
 
-        when(this.userRepository.findByEmailAndToken((String)any(),(String)any()))
+        when(this.userRepository.findByEmail((String)any()))
                 .thenReturn(Optional.of(UserUtility.generateUserSaved()));
         when(this.userRepository.save(any(User.class))).thenReturn(UserUtility.generateUserSavedWithLastLogin());
         doReturn(Optional.of(UserUtility.generateUserSaved())).when(this.userRepository)
-                .findByEmailAndToken((String)any(),(String)any());
-        when(this.userMapper.map(any(User.class))).thenReturn(UserUtility.generateUserDTOSavedWithLastLogin());
+                .findByEmail((String)any());
+        when(this.userMapper.map(any(User.class),(String)any())).thenReturn(UserUtility.generateUserDTOSavedWithLastLogin());
 
         MockedStatic mockedStatic = Mockito.mockStatic(JwtUtil.class);
         mockedStatic.when(()-> JwtUtil.getEmailUser((String)any()))
